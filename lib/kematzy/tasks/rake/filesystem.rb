@@ -3,8 +3,8 @@
 namespace :fs do
   
   desc "Copy file/dir(s) :from => :to (from=path/2/.., to=path/2/..)"
-  task :copy, [:from, :to] do |t, args|
-    unless args.from && args.to
+  task :copy, [:from, :to] do |t, args| 
+    unless args.from && args.to 
       msg = %Q[\nERROR:\n\n  You must define the :from, :to variable like this:\n]
       msg << %Q[  rake copy from=path/2/something/ to=path/2/something \n\n]
       msg << %Q[  NB! remember to add a trailing '/' to the end of :from \n]
@@ -18,8 +18,8 @@ namespace :fs do
   end
   
   desc "Move file/dir(s) :from => :to (from=path/2/.., to=path/2/..)"
-  task :move, [:from, :to] do |t, args|
-    unless args.from && args.to
+  task :move, [:from, :to] do |t, args| 
+    unless args.from && args.to 
       msg = %Q[\nERROR:\n\n  You must define the :from, :to variable like this:\n]
       msg << %Q[  rake move from=path/2/something/ to=path/2/something \n\n]
       msg << %Q[  NB! remember to add a trailing '/' to the end of :from \n]
