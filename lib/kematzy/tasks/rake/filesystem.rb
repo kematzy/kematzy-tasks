@@ -6,7 +6,7 @@ namespace :fs do
   task :copy, [:from, :to] do |t, args| 
     unless args.from && args.to 
       msg = %Q[\nERROR:\n\n  You must define the :from, :to variable like this:\n]
-      msg << %Q[  rake copy from=path/2/something/ to=path/2/something \n\n]
+      msg << %Q[  rake fs:copy from=path/2/something/ to=path/2/something \n\n]
       msg << %Q[  NB! remember to add a trailing '/' to the end of :from \n]
       msg << %Q[  when you want to copy the contents only \n\n]
       puts msg
@@ -21,7 +21,7 @@ namespace :fs do
   task :move, [:from, :to] do |t, args| 
     unless args.from && args.to 
       msg = %Q[\nERROR:\n\n  You must define the :from, :to variable like this:\n]
-      msg << %Q[  rake move from=path/2/something/ to=path/2/something \n\n]
+      msg << %Q[  rake fs:move from=path/2/something/ to=path/2/something \n\n]
       msg << %Q[  NB! remember to add a trailing '/' to the end of :from \n]
       msg << %Q[  when you want to move the contents only \n\n]
       puts msg
@@ -41,7 +41,7 @@ namespace :fs do
       task :models, [:path] do |t, args| 
         unless args.path
           msg = %Q[\nERROR:\n\n  You must define the :path variable like this:\n]
-          msg << %Q[  rake create:dir:models path=path/2/dir \n\n]
+          msg << %Q[  rake fs:create:dir:models path=path/2/dir \n\n]
           puts msg
         else
           # do task here
@@ -53,7 +53,7 @@ namespace :fs do
       task :helpers, [:path] do |t, args| 
         unless args.path
           msg = %Q[\nERROR:\n\n  You must define the :path variable like this:\n]
-          msg << %Q[  rake create:dir:helpers path=path/2/dir \n\n]
+          msg << %Q[  rake fs:create:dir:helpers path=path/2/dir \n\n]
           puts msg
         else
           # do task here
@@ -65,7 +65,7 @@ namespace :fs do
       task :routes, [:path] do |t, args| 
         unless args.path
           msg = %Q[\nERROR:\n\n  You must define the :path variable like this:\n]
-          msg << %Q[  rake create:dir:routes path=path/2/dir \n\n]
+          msg << %Q[  rake fs:create:dir:routes path=path/2/dir \n\n]
           puts msg
         else
           # do task here
@@ -77,7 +77,7 @@ namespace :fs do
       task :classes, [:path] do |t, args| 
         unless args.path
           msg = %Q[\nERROR:\n\n  You must define the :path variable like this:\n]
-          msg << %Q[  rake create:dir:classes path=path/2/dir \n\n]
+          msg << %Q[  rake fs:create:dir:classes path=path/2/dir \n\n]
           puts msg
         else
           # do task here
@@ -89,7 +89,7 @@ namespace :fs do
       task :new, [:path] do |t, args| 
         unless args.path
           msg = %Q[\nERROR:\n\n  You must define the :path variable like this:\n]
-          msg << %Q[  rake create:dir:new path=path/2/new/dir \n\n]
+          msg << %Q[  rake fs:create:dir:new path=path/2/new/dir \n\n]
           puts msg
         else
           sh "mkdir -p #{Dir.pwd}/#{args.path}"
