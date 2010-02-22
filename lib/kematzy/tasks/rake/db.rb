@@ -7,7 +7,7 @@ namespace :db do
     task :setup do 
       # step 1: backup current production db
       db_name = 'production.db'
-      `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%d%m-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
+      `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
       puts "\n-- created a compressed backup version of [ production.db ]\n"
       
       sh "cp db/development.db db/production.db"
@@ -32,7 +32,7 @@ namespace :db do
         puts %Q[\nERROR:\n\n  You must define the DB variable like this:\n  rake db:backup:db db=db/name-of-database.db\n\n]
       else
         db_name = args.db.sub(/^db\//,'')
-        `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%d%m-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
+        `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
         puts "\n-- created a compressed backup version of [ #{args.db} ]\n\n"
       end
     end
@@ -112,7 +112,7 @@ def dump_all_dbs_and_wrap_dumps_with_comments(dump_dir = :backups)
     if dump_dir == :bootstraps
       backup_file = "db/#{dump_dir}/#{File.basename(db)}.sql"
     else
-      backup_file = "db/#{dump_dir}/#{Time.now.strftime("%Y%d%m-%H%M%S")}-#{File.basename(db)}.sql"
+      backup_file = "db/#{dump_dir}/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{File.basename(db)}.sql"
     end
     
     comment = %Q['-- ++++ ]
@@ -122,7 +122,7 @@ def dump_all_dbs_and_wrap_dumps_with_comments(dump_dir = :backups)
       comment << %Q[\n-- BACKUP OF DB [ #{File.basename(db)} ] ]
     end
     comment << %Q[\n-- IN APP [ #{File.dirname(File.expand_path(__FILE__))}/ ] ]
-    comment << %Q[\n-- Created on [ #{Time.now.strftime("%Y-%d-%m at %H:%M:%S")} ] ]
+    comment << %Q[\n-- Created on [ #{Time.now.strftime("%Y-%m-%d at %H:%M:%S")} ] ]
     comment << %Q[\n-- ]
     comment << %Q[\n-- /++++ \n']
     
