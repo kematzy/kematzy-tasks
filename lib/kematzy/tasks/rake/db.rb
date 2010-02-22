@@ -67,7 +67,7 @@ namespace :db do
   task :dump do 
     # In order to dump a SQLite database you can use the following command:
     # sqlite database .dump > database.sql
-    dump_all_dbs_and_wrap_dumps_with_comments(:backups)
+    Kematzy::Tasks::Rake::DB.dump_all_dbs_and_wrap_dumps_with_comments(:backups)
     puts "-- dumped all DBs into .sql files\n\n"
   end
   
@@ -75,7 +75,7 @@ namespace :db do
     
     desc "Dump current database as a bootstrap .sql file"
     task :bootstrap do 
-      dump_all_dbs_and_wrap_dumps_with_comments(:bootstraps)
+      Kematzy::Tasks::Rake::DB.dump_all_dbs_and_wrap_dumps_with_comments(:bootstraps)
     end
     
   end #/ namespace :dump
@@ -101,40 +101,3 @@ namespace :db do
   
   
 end #/ namespace :db
-
-
-##
-# TODO: add some comments here
-#  
-# ==== Examples
-# 
-# 
-# @api private
-def dump_all_dbs_and_wrap_dumps_with_comments(dump_dir = :backups) 
-  # ensure we have that directory to dump into first
-  FileUtils.mkdir_p("db/#{dump_dir.to_s}")
-  
-  Dir["db/*.db"].each do |db|
-    if dump_dir == :bootstraps
-      backup_file = "db/#{dump_dir}/#{File.basename(db)}.sql"
-    else
-      backup_file = "db/#{dump_dir}/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{File.basename(db)}.sql"
-    end
-    
-    comment = %Q['-- ++++ ]
-    if dump_dir == :bootstraps
-      comment << %Q[\n-- BOOTSTRAP FILE FOR DB [ #{File.basename(db)} ] ]
-    else
-      comment << %Q[\n-- BACKUP OF DB [ #{File.basename(db)} ] ]
-    end
-    comment << %Q[\n-- IN APP [ #{Dir.pwd} ] ]
-    comment << %Q[\n-- Created on [ #{Time.now.strftime("%Y-%m-%d at %H:%M:%S")} ] ]
-    comment << %Q[\n-- ]
-    comment << %Q[\n-- /++++ \n']
-    
-    `echo #{comment} > #{backup_file}`
-    sh "sqlite3 #{db} .dump >> #{backup_file}"
-    `echo '\n-- \n-- /EOF \n-- ' >> #{backup_file}`
-  end
-  
-end
