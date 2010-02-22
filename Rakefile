@@ -10,7 +10,7 @@ begin
     gem.email = "kematzy@gmail.com"
     gem.homepage = "http://github.com/kematzy/kematzy-tasks"
     gem.authors = ["kematzy"]
-    # gem.add_dependency('dependency', '>=x.x.x')
+    gem.add_dependency('rake', '>=0.8.7')
     gem.add_development_dependency("rspec")
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
