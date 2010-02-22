@@ -1,6 +1,294 @@
-= kematzy-tasks
+= Kematzy::Tasks
 
-Description goes here.
+A helpful collection of Rake tasks for improved workflows.
+
+
+== Installation
+
+  #  Add Gemcutter to your RubyGems sources 
+  $  gem sources -a http://gemcutter.com
+
+  $  (sudo)? gem install kematzy-tasks
+
+== Dependencies
+
+This Gem depends upon the following:
+
+=== Runtime:
+
+* rake ( >= 0.8.7 )
+
+=== Development & Tests:
+
+* rspec (>= 1.2.7 )
+
+
+== Getting Started
+
+These tasks are available:
+
+
+=== DB  =>  Database Related Tasks
+
+<b>NB!  These tasks are only supporting SQLite3 databases with name ending in <tt>.db</tt> for now.</b>
+
+
+To setup the <tt>../db/</tt> directories used by these Rake tasks.
+
+  rake db:setup  => creates ../db/bootstraps & ../db/backups in the Rakefile directory.
+
+
+==== DB  =>  BACKUPS
+
+
+To backup a database <tt>[db]</tt> and compresses it as a <tt>YYYY-MM-DD-[db].tar.gz</tt> file.
+
+  rake db:backup:db db=/name-of-database.db  => 
+    
+    ../db/backups/YYYY-MM-DD-name-of-database.db.tar.gz
+    
+  
+  alias:
+    
+    rake db:backup db=/name-of-database.db
+    
+    
+
+To dump (backup) <b>ALL databases</b> into <tt>.sql</tt> files.
+
+  rake db:dump  =>
+  
+    # creates ../db/backups/YYYYMMDD-HHMMSS-development.db.sql
+    # with the following comments in the sql file
+    #
+      -- ++++ 
+      -- BACKUP OF DB [ development.db ] 
+      -- IN APP [ /full/path/2/your/app ] 
+      -- Created on [ YYYY-MM-DD at HH:MM:SS ] 
+      -- 
+      -- /++++ 
+    
+  
+  alias:
+    
+    rake db:backups
+    
+    rake db:backup:sql
+    
+
+
+==== DB  =>  BOOTSTRAPS
+
+
+To dump <b>all current databases</b> as bootstrap <tt>.sql</tt> files.
+  
+  rake db:dump:bootstrap
+  
+
+
+
+To bootstrap an existing database with its <tt>..db/bootstraps/*.sql</tt> file.
+
+  rake db:bootstrap db=db/development.db  =>
+    
+    # is equivalent to this:
+    `sqlite3 db/development.db < db/bootstraps/development.db.sql`
+    
+    
+    
+To bootstrap a NEW database with a <tt>..db/bootstraps/*.sql</tt> file.
+
+  rake db:bootstrap:new db=db/new.db bf=db/bootstraps/somefile.sql
+    
+    # creates the new DB ../db/new.db
+    
+    # and loads the contents of ../db/bootstraps/somefile.sql into it
+
+
+==== DB  => EXTRAS
+
+
+To copy the <tt>../db/development.db</tt> into <tt>..db/production.db</tt>.
+
+  rake db:production:setup  => 
+  
+
+
+
+=== FS  =>  File System Related Tasks
+
+
+Commonly used file system related tasks.
+
+<b>NB!  Use these with care, as they might NOT be 100% solid at this stage.</b>
+
+
+==== FS  =>  COPY
+
+
+To copy files or directories from one location to another.
+  
+  # copies the file to the directory
+  rake fs:copy from=path/from/filename.ext to=path/to/some/directory
+  
+  # copies the contents of the from directory to the to directory
+  rake fs:copy from=path/from/directory/ to=path/to/some/directory
+  
+  # copies the whole directory to the new path
+  rake fs:copy from=path/from/directory to=path/to/some/new/path
+  
+
+==== FS  =>  MOVE
+
+To move files or directories from one location to another.
+
+  # moves the file to the directory
+  rake fs:move from=path/from/filename.ext to=path/to/some/directory
+  
+  # moves the contents of the from directory to the to directory
+  rake fs:move from=path/from/directory/ to=path/to/some/directory
+  
+  # moves the whole directory to the new path
+  rake fs:move from=path/from/directory to=path/to/some/new/path
+
+
+
+==== FS  =>  CREATE 
+
+
+To create a NEW directory at the path given.
+
+  rake fs:create:dir:new path=path/2/new/dir 
+  
+
+Other Create Tasks (more specific to my workflow perhaps)
+
+To create a Classes directory at the path given.
+  
+  rake fs:create:dir:classes path=path/2/dir  =>
+    
+    # results in  ../path/2/dir/classes being created
+    
+
+To create a Helpers directory at the path given.
+  
+  rake fs:create:dir:helpers path=path/2/dir  =>
+    
+    # results in  ../path/2/dir/helpers being created
+    
+
+To create a Models directory at the path given.
+  
+  rake fs:create:dir:models path=path/2/dir  =>
+    
+    # results in  ../path/2/dir/models being created
+    
+
+To create a Routes directory at the path given.
+  
+  rake fs:create:dir:routes path=path/2/dir  =>
+    
+    # results in  ../path/2/dir/routes being created
+    
+
+
+=== PASSENGER  =>  Passenger / mod_rails Related Tasks
+
+
+To restart the server, and create the ../tmp/restart.txt file (if missing)
+  
+  rake passenger:init  => touch tmp/restart.txt
+    
+    
+    alias:
+      
+      rake passenger:restart
+      
+      rake psr
+    
+
+
+To turn on "Always Restart Passenger" on each request.
+
+  rake passenger:always:on  =>  touch tmp/always_restart.txt
+  
+    alias:
+      
+      rake pson
+  
+
+To turn <b>OFF</b> "Always Restart Passenger" on each request.
+
+  rake passenger:always:off  =>  rm tmp/always_restart.txt
+  
+    alias:
+      
+      rake psoff
+    
+
+
+===  SYMLINK => Symlink Related Tasks
+
+When developing sites, I keep certain directories out of Git versioning, and instead 
+store them in a 'shared' directory one level up from my app.  
+
+I then symlink the directories into the <tt>../APP_ROOT/public/</tt> directory.
+
+
+To symlink all shared directories to public/.
+
+  rake symlink:shared dirs=images, photos, downloads,.... =>
+    
+    # equivalent of:
+    `ln -s ../APP_ROOT/shared/downloads ../APP_ROOT/public/downloads
+    and so on...
+
+
+
+=== SASS  =>  Sass Related Tasks
+
+This is a very personal workflow task, whereby I essentially have this Sinatra App structure.
+
+  APP_ROOT
+    |
+    |-> config.ru
+    |
+    |-> apps
+    |     |
+    |     |-> app1
+    |     |     |
+    |     |     |-> sass
+    |     |     |     |
+    |     |     |     |_> _pages.sass  #
+    |     |     |     |
+    |     |     |     |-> pages
+    |     |     |     |     |
+    |     |     |     |     |-> home.sass
+    |     |     |     |     |-> login.sass
+    |     |     |     |     |-> ....
+    |     |     |     |     |
+    |     |     |
+    |     |
+    |     |-> app2
+    |     |
+    |     |-> ....
+
+
+Create a NEW Sass page and include it in the _pages.sass file for loading.
+  
+  rake sass:page:new page=app1:logout  =>
+  
+    # creates the ../apps/app1/sass/pages/logout.sass page and includes it in the _pages.sass file
+    
+
+== TODOs
+
+* Make it less personal perhaps.
+
+* Make the DB Tasks work with both MySQL and SQLite3 databases.
+
+* Work out how to test all these tasks via RSpec tests, for more solid tasks.
+
 
 == Note on Patches/Pull Requests
  

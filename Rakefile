@@ -50,7 +50,7 @@ desc 'Build the rdoc HTML Files'
 task :docs do
   version = File.exist?('VERSION') ? IO.read('VERSION').chomp : "[Unknown]"
     
-  sh "sdoc -N --title 'kematzy-tasks v#{version}' lib/"
+  sh "sdoc -N --title 'kematzy-tasks v#{version}' lib/ README.rdoc"
 end
 
 namespace :docs do
