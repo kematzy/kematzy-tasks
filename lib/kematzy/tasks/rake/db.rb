@@ -1,20 +1,6 @@
 
 namespace :db do 
   
-  namespace :production do 
-    
-    desc "Convert development.db into production.db"
-    task :setup do 
-      # step 1: backup current production db
-      db_name = 'production.db'
-      `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
-      puts "\n-- created a compressed backup version of [ production.db ]\n"
-      
-      sh "cp db/development.db db/production.db"
-    end
-  end #/ namespace production
-  
-  
   desc "Backup database to .tar.gz file (=> db:backup:db)"
   task :backup  => ['db:backup:db']
   
@@ -94,6 +80,26 @@ namespace :db do
     
   end #/ namespace :dump
   
+  namespace :production do 
+    
+    desc "Convert development.db into production.db"
+    task :setup do 
+      # step 1: backup current production db
+      db_name = 'production.db'
+      `cd db/ && tar zcf ../db/backups/#{Time.now.strftime("%Y%m%d-%H%M%S")}-#{db_name}.tar.gz #{db_name} `
+      puts "\n-- created a compressed backup version of [ production.db ]\n"
+      
+      sh "cp db/development.db db/production.db"
+    end
+  end #/ namespace production
+  
+  desc "Init DB directory structure, for use by these Rake commands"
+  task :setup do 
+    sh "mkdir -p db/bootstraps"
+    sh "mkdir -p db/backups"
+  end
+  
+  
 end #/ namespace :db
 
 
@@ -121,7 +127,7 @@ def dump_all_dbs_and_wrap_dumps_with_comments(dump_dir = :backups)
     else
       comment << %Q[\n-- BACKUP OF DB [ #{File.basename(db)} ] ]
     end
-    comment << %Q[\n-- IN APP [ #{File.dirname(File.expand_path(__FILE__))}/ ] ]
+    comment << %Q[\n-- IN APP [ #{Dir.pwd} ] ]
     comment << %Q[\n-- Created on [ #{Time.now.strftime("%Y-%m-%d at %H:%M:%S")} ] ]
     comment << %Q[\n-- ]
     comment << %Q[\n-- /++++ \n']
