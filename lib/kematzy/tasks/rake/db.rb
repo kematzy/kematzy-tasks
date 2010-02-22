@@ -1,3 +1,4 @@
+require "kematzy/tasks"
 
 namespace :db do 
   
