@@ -3,7 +3,7 @@
 module Kematzy
   
   module Tasks
-    VERSION = '0.1.0'
+    VERSION = '0.1.1'
     def self.version
       "Kematzy::Tasks v#{VERSION}"
     end
